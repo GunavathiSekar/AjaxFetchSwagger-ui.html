@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<title>Document</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script >
+    id=0;
+updateindex = -1;
+function loadData() {
+    alert('validated!');
+    $.ajax({
+        type: 'GET',
+        url: "http://localhost:9090/country",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#box").append("<table border='1|1' class='table' ><tr> <th width='50'>Id</th>"
+                + "<th width='50'>Country Name</th> </tr></table>");
+            var tr;
+            for (var i = 0; i < data.length; i++) {
+                tr = $('<tr/>');
+                tr.append("<td >" + data[i].countryid+ "</td>");
+                tr.append("<td>" + data[i].countryname + "</td>");
+                var d = JSON.stringify(data[i]);
+                tr.append("<td><button onclick='update(" + d + ")' >Edit</button> <button onclick=delete1(" + data[i].countryid + ") >Delete</button></td>");
+                $('table').append(tr);
+            }
+        },
+        error: function () {
+            alert('fail....post');
+        }
+    });
+}
+function delete1(data) {
+    alert("delete.....");
+     //var del=$('#id').val();
+     alert("data"+data);
+    $.ajax({
+        type: "DELETE",
+        url: "http://localhost:9090/country/"+data,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        // success: function (data) { alert(JSON.stringify(data)); console.log(data); },
+        failure: function (errMsg) {
+            console.log(errMsg);
+            alert(errMsg);
+        }
+    });
+}
+
+function add() {
+    alert("post");
+    var dept = {
+        "countryname":  $('#name').val()
+    };
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:9090/country/test",
+        data: JSON.stringify(dept),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) { alert(JSON.stringify(data)); console.log(data); },
+        failure: function (errMsg) {
+            console.log(errMsg);
+            alert(errMsg);
+        }
+    });
+}
+function update(data) {
+    alert("Update");
+    alert("update....." + JSON.stringify(data));
+    updateID = data.countryid;
+    btnchg = updateID;
+    // if (btnchg > 0) { $("input:submit").val("update") }
+     id=$("#id").val(data.countryid);
+    $("#name").val(data.countryname);
+};
+
+function update1(id)
+{
+    var update1 = {
+        "countryid":$('#id').val(),
+        "countryname":  $('#name').val()
+    };
+    $.ajax({
+        type: "PUT",
+        url: "http://localhost:9090/country/"+id,
+        data: JSON.stringify(update1),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) { alert(JSON.stringify(data)); console.log(data); },
+        failure: function (errMsg) {
+            console.log(errMsg);
+            alert(errMsg);
+        }
+    });
+}
+function getData() {
+    alert('validated!');
+    $.ajax({
+        type: 'GET',
+        url: "http://localhost:9090/country",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#box").append("<table border='1|1' class='table' ><tr> <th width='50'>Id</th>"
+                + "<th width='50'>Country Name</th> </tr></table>");
+            var tr;
+            for (var i = 0; i < data.length; i++) {
+                tr = $('<tr/>');
+                tr.append("<td >" + data[i].countryid+ "</td>");
+                tr.append("<td>" + data[i].countryname + "</td>");
+                var d = JSON.stringify(data[i]);
+                tr.append("<td><button onclick='update(" + d + ")' >Edit</button> <button onclick=delete1(" + data[i].countryid + ") >Delete</button></td>");
+                $('table').append(tr);
+            }
+        },
+        error: function () {
+            alert('fail....post');
+        }
+    });
+}
+</script>
+</head>
+<body onload="loadData()">
+ <label>COUNTRY ID</label><input type="text" name="id" id="id"><br>
+<label>COUNTRY NAME</label><input type="text" name="name" id="name"><br>
+<!-- <button type="submit" value="(btnchg >0) ? 'update' : 'add' " onclick="btnchg >0
+? update1() : add()">Add</button> -->
+<button name="add" onclick="add()"> Add</button><br>
+<button name="update" onclick="update1()">Update</button><br>
+<button name="get" onclick="getData()">get</button>
+<p id="box"></p>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<title>Document</title>
+<script>
+
+names = ['Krishna', 'Sathish', 'Hermana', 'Saan', 'lavanya'];
+
+updateindex = -1;
+
+function fetchall() {
+
+//alert(updateindex);
+
+var html = "<table border='1|1'>";
+
+for (var i = 0; i < names.length; i++)
+{
+
+html += "<tr>";
+
+html += "<td>" + names[i] + "</td>";
+
+html += '<td><button onclick="edit(' + i + ')">Edit</button></td>';
+
+html += '<td><button onclick="del(' + i + ')">Delete</button></td>';
+
+html += "</tr>";
+
+}
+
+html += "</table>";
+
+document.getElementById("box").innerHTML = html;
+
+}
+
+function edit(i) {
+
+//alert("Edit clicked " + i + " " + names[i]);
+
+document.getElementById("name").value = names[i];
+
+updateindex=i;
+
+alert(updateindex);
+
+}
+
+function del(i) {
+
+//alert("Delete clicked " + i + " " + names[i]);
+
+names.splice(i, 1);
+
+fetchall();
+
+}
+
+function add() {
+
+el = document.getElementById('name');
+
+var name = el.value;
+
+if (name) {
+
+names.push(name.trim());
+
+el.value = '';
+
+fetchall();
+
+}
+
+}
+
+function update() {
+
+//console.log("update click // " + document.getElementById('name').value);
+
+el = document.getElementById('name');
+
+var name = el.value;
+
+names[updateindex] = name;
+
+document.getElementById('name').value='';
+
+fetchall();
+
+}
+
+</script>
+
+</head>
+
+
+<body onload="fetchall()">
+
+<input type="text" name="name" id="name">
+
+<!-- <button type="submit" onclick="add()">submit</button> -->
+
+<button type="submit" value="(updateindex>0) ? 'Update' : 'Add' " onclick="updateindex>0
+? update() : add()">Add</button>
+
+<!-- <button type="button" onclick="update()">update</button> -->
+
+<p id="box"></p>
+
+</body>
+
+
+
+
+</html>
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        // names = ['Krishna', 'Sathish', 'Hermana', 'Saan', 'lavanya'];
+        names = [];
+         deletenames=[];
+        name1=[];
+        person2 = [];
+        updateindex = 0;
+        var xhttp = new XMLHttpRequest();
+
+        function fetchall() {
+
+            xhttp.open("GET", "http://localhost:9090/country", true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                console.log(this.responseText);
+                if (this.readyState == 4 && this.status == 200) {
+                    names = this.responseText.split(":");
+                }
+            };
+            xhttp.onreadystatechange = processRequest;
+
+            function processRequest(e) {
+                console.log('Getting the response ...');
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    var response = JSON.parse(xhttp.responseText);
+                    names = JSON.parse(xhttp.responseText);
+                    var html = "<table id=tbl1 border='1|1'>";
+                    for (var i = 0; i < names.length; i++) {
+                        html += "<tr>";
+                        html += "<td>" + names[i].countryname + "</td>";
+                        html += '<td><button onclick="edit(' + i + ')">Edit</button></td>';
+                        html += '<td><button onclick="del(' + i + ')">Delete</button></td>';
+                        html += "</tr>";
+                    }
+                    html += "</table>";
+                    document.getElementById("box").innerHTML = html;
+                    answer = JSON.stringify(response);
+                    console.log(names.length + ' // Your ip address is // ' + answer);
+                } else {
+                    console.log('Error state=' + xhttp.readyState + ', status=' + xhttp.status);
+                }
+            
+            html += "</table>";
+            document.getElementById("box").innerHTML = html;
+        }}
+        function fetchall2() {
+            alert("fetch2");
+            alert(names);
+                            var html = "<table border='1|1'>";
+                            updateindex=0
+                          
+                for (var i = 0; i < names.length; i++) {
+                    html += "<tr>";
+                    html += "<td>" + names[i].countryname+ "</td>";
+                    html += '<td><button onclick="edit(' + i + ')">Edit</button></td>';
+                    html += '<td><button onclick="del(' + i + ')">Delete</button></td>';
+                    html += "</tr>";
+                    console.log(names[i].countryname);
+                }
+            
+            html += "</table>";
+                document.getElementById("box").innerHTML = html;
+            
+            
+            
+            }
+            
+        function saveAndUpdate() {
+            ((document.getElementById('myBtn').innerHTML == "submit") ? this.add() : this.update());
+            // if (document.getElementById('myBtn').innerHTML == "submit") {
+            //     this.add();
+            // }
+            // else {
+            //     this.update();
+            // }
+        }
+
+        function edit(i) {
+            alert(names[i].countryid);
+            document.getElementById("myBtn").innerHTML = "update";
+            document.getElementById("name").value = names[i].countryname;
+            // document.getElementById("id").value = names[i].countryid;
+        
+            updateindex = i;
+            fetchall2();
+        }
+
+        function del(i) {
+            
+                  
+             alert(i);   
+            names.splice(i, 1);
+            alert(names);
+            deletenames.push(JSON.stringify(names));
+            alert(deletenames);
+            fetchall2();
+        }
+
+        function add() {
+            el = document.getElementById('name');
+            var name = el.value;
+            if (name) {
+                names.push(name.trim());
+
+                xhttp.open("POST", "http://localhost:9090/country/test", true);
+                xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                // xhttp.send(JSON.stringify({ countryid:0,countryname: name}));
+                // JSONObject item = new JSONObject();
+                var person = new Object();
+                person.countryid = 0;
+                person.countryname = name;
+
+                // transformedText = person.replace('""', '"');
+                console.log("****************" + JSON.stringify(person));
+                xhttp.send(JSON.stringify(person));
+
+               // el.value = '';
+                // fetchall2();
+            }
+        }
+
+        function update() {
+            el = document.getElementById('name');
+            // el1=document.getElementById('id');
+            var name = el.value;
+            // var id=el1.value;
+            names[updateindex] = {countryid:0,countryname:name};
+            alert(names[updateindex]);
+            alert("++++++++++++++++++++++" +names[1].countryname);
+            document.getElementById('name').value = '';
+            // document.getElementById('id').value = '';
+            document.getElementById('myBtn').innerHTML = 'submit';
+            fetchall2();
+        }
+    </script>
+</head>
+
+<body onload="fetchall()">
+    <input type="text" name="name" id="name">
+    <button type="submit" id="myBtn" onclick="saveAndUpdate()">submit</button>
+    <!-- <button type="submit" value="(updateindex>0) ? 'Update' : 'Add' " onclick="updateindex>0 ? update() : add()">Add</button> -->
+    <p id="box"></p>
+</body>
+
+</html>
